@@ -175,8 +175,8 @@ importers:
   packages/server:
     dependencies:
       '@meting/core':
-        specifier: ^1.6.0
-        version: 1.6.0
+        specifier: ^1.6.1
+        version: 1.6.1
       '@music-together/shared':
         specifier: workspace:*
         version: link:../shared
@@ -750,8 +750,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@meting/core@1.6.0':
-    resolution: {integrity: sha512-ctOTU7TKHwzfy8wC//5B1drNhuNHbdjsaXYFDbhmmV4OstYpGahJyRMN99jmjAXY7dN4G7snx5w+1378ebgzBA==}
+  '@meting/core@1.6.1':
+    resolution: {integrity: sha512-6LPRZlZc8hUc0Jmg74tbMBLeoyXoyttPBLoNNpybLZ6GY+de95h9w3YQGh0yDwnrSivqcHMGZ5u5VJym5PdY1w==}
 
   '@modelcontextprotocol/sdk@1.26.0':
     resolution: {integrity: sha512-Y5RmPncpiDtTXDbLKswIJzTqu2hyBKxTNsgKqKclDbhIgg1wgtf1fRuvxgTnRfcnxtvvgbIEcqUOzZrJ6iSReg==}
@@ -5084,7 +5084,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@meting/core@1.6.0': {}
+  '@meting/core@1.6.1': {}
 
   '@modelcontextprotocol/sdk@1.26.0(zod@3.25.76)':
     dependencies:
