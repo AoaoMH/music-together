@@ -7,5 +7,6 @@ dist
 Thumbs.db
 .claude
 .spec-workflow
-.pnpm-store
+.pnpm-store/
 .omc
+.trae

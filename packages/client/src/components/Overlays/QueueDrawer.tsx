@@ -1,6 +1,5 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
@@ -12,9 +11,9 @@ import { EVENTS } from '@music-together/shared'
 import { useHasHover } from '@/hooks/useHasHover'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useCallback, useContext, useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { AbilityContext } from '@/providers/AbilityProvider'
 import { ArrowUpToLine, ChevronDown, ChevronUp, ListX, Music, Play, Trash2, User, X } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
 import { toast } from 'sonner'
 import { MarqueeText } from '@/components/ui/marquee-text'
 import type { MusicSource } from '@music-together/shared'
@@ -53,6 +52,14 @@ export function QueueDrawer({ open, onOpenChange, onRemoveFromQueue, onReorderQu
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null)
   // Desktop: after clicking an action, temporarily suppress the hover toolbar until the cursor leaves the item
   const [dismissedHoverTrackId, setDismissedHoverTrackId] = useState<string | null>(null)
+
+  const [scrollElement, setScrollElement] = useState<HTMLDivElement | null>(null)
+  const virtualizer = useVirtualizer({
+    count: queue.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => 56,
+    overscan: 5,
+  })
 
   // Clear the confirm-dismiss timer on unmount
   useEffect(
@@ -199,23 +206,33 @@ export function QueueDrawer({ open, onOpenChange, onRemoveFromQueue, onReorderQu
           </div>
         </DrawerHeader>
 
-        <ScrollArea className="min-h-0 flex-1">
+        <div ref={setScrollElement} className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-2">
           {queue.length === 0 ? (
             <div className="flex h-40 items-center justify-center text-muted-foreground">播放列表为空</div>
           ) : (
-            <div className="w-full overflow-hidden p-2">
-              <AnimatePresence initial={false}>
-                {queue.map((track, i) => (
-                  <motion.div
+            <div className="w-full" style={{ height: `${virtualizer.getTotalSize()}px`, position: 'relative' }}>
+              {virtualizer.getVirtualItems().map((virtualRow) => {
+                const i = virtualRow.index
+                const track = queue[i]
+                if (!track) return null
+                return (
+                  <div
                     key={track.id}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={cn(
-                      'group relative flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-accent/50',
-                      currentTrack?.id === track.id && 'bg-primary/10',
-                    )}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: `${virtualRow.size}px`,
+                      transform: `translateY(${virtualRow.start}px)`,
+                      paddingTop: '8px', // To simulate the top padding/gap
+                    }}
+                  >
+                    <div
+                      className={cn(
+                        'group relative flex h-full items-center gap-2 rounded-lg px-2 transition-colors hover:bg-accent/50',
+                        currentTrack?.id === track.id && 'bg-primary/10',
+                      )}
                     onClick={() => {
                       if (isTouch) {
                         setActiveTrackId((prev) => (prev === track.id ? null : track.id))
@@ -381,12 +398,13 @@ export function QueueDrawer({ open, onOpenChange, onRemoveFromQueue, onReorderQu
                         </Tooltip>
                       )}
                     </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+                  </div>
+                </div>
+              )
+            })}
             </div>
           )}
-        </ScrollArea>
+        </div>
       </DrawerContent>
     </Drawer>
   )

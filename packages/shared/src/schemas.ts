@@ -117,7 +117,7 @@ export const searchQuerySchema = z.object({
   keyword: z.string().min(1).max(LIMITS.SEARCH_KEYWORD_MAX_LENGTH),
   limit: z.coerce.number().int().min(1).max(LIMITS.SEARCH_PAGE_SIZE_MAX).default(20),
   page: z.coerce.number().int().min(1).max(LIMITS.SEARCH_PAGE_MAX).default(1),
-  type: z.enum(['song', 'album']).optional().default('song'),
+  type: z.enum(['song', 'album', 'playlist']).optional().default('song'),
 })
 
 export const urlQuerySchema = z.object({
@@ -140,7 +140,7 @@ export const coverQuerySchema = z.object({
 export const playlistQuerySchema = z.object({
   source: musicSourceSchema,
   id: z.string().min(1).max(LIMITS.PLAYLIST_ID_MAX_LENGTH),
-  limit: z.coerce.number().int().min(1).max(200).default(100),
+  limit: z.coerce.number().int().min(1).max(1000).default(100),
   offset: z.coerce.number().int().min(0).default(0),
   total: z.coerce.number().int().min(0).optional(),
   roomId: z.string().min(1).max(10).optional(),
