@@ -222,6 +222,13 @@ export function usePlaylist() {
     [socket],
   )
 
+  const insertTrackAfterCurrent = useCallback(
+    (track: Track) => {
+      socket.emit(EVENTS.QUEUE_INSERT_AFTER_CURRENT, { track })
+    },
+    [socket],
+  )
+
   const addBatchToQueue = useCallback(
     (tracks: Track[], playlistName?: string) => {
       socket.emit(EVENTS.QUEUE_ADD_BATCH, { tracks, playlistName })
@@ -241,6 +248,7 @@ export function usePlaylist() {
     fetchPlaylistTracks,
     loadMoreTracks,
     addTrackToQueue,
+    insertTrackAfterCurrent,
     addBatchToQueue,
   }
 }

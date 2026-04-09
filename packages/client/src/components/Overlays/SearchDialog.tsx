@@ -151,6 +151,7 @@ export function SearchDialog({ open, onOpenChange, onAddToQueue, onInsertAfterCu
               total={playlistTotal}
               onBack={() => setSelectedAlbum(null)}
               onAddTrack={handleAdd}
+              onInsertAfterCurrent={handleInsertAfterCurrent}
               onAddAll={handleAddBatch}
               onLoadMore={loadMoreTracks}
             />
