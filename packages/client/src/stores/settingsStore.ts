@@ -39,8 +39,7 @@ type SettingsStore = ResettableFields<'ttmlEnabled', boolean> &
   ResettableFields<'lyricRomanFontSize', number> &
   ResettableFields<'bgFps', number> &
   ResettableFields<'bgFlowSpeed', number> &
-  ResettableFields<'bgRenderScale', number> &
-  ResettableFields<'playlistLoadLimit', number>
+  ResettableFields<'bgRenderScale', number>
 
 // ---------------------------------------------------------------------------
 // Store 实现
@@ -96,6 +95,5 @@ export const useSettingsStore = create<SettingsStore>((set) => {
     ...resettable('bgFps', storage.getBgFps, storage.setBgFps),
     ...resettable('bgFlowSpeed', storage.getBgFlowSpeed, storage.setBgFlowSpeed),
     ...resettable('bgRenderScale', storage.getBgRenderScale, storage.setBgRenderScale),
-    ...resettable('playlistLoadLimit', storage.getPlaylistLoadLimit, storage.setPlaylistLoadLimit),
   } as SettingsStore
 })
