@@ -156,6 +156,7 @@ export function useHowl(onTrackEnd: () => void) {
           }
         },
         onplay: () => {
+          if (howlRef.current !== howl) return
           usePlayerStore.getState().setIsPlaying(true)
           const dur = howl.duration()
           if (Number.isFinite(dur) && dur > 0) {
@@ -164,10 +165,12 @@ export function useHowl(onTrackEnd: () => void) {
           startTimeUpdate()
         },
         onpause: () => {
+          if (howlRef.current !== howl) return
           usePlayerStore.getState().setIsPlaying(false)
           stopTimeUpdate()
         },
         onend: () => {
+          if (howlRef.current !== howl) return
           usePlayerStore.getState().setIsPlaying(false)
           stopTimeUpdate()
           onTrackEnd()

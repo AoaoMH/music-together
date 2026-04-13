@@ -60,6 +60,7 @@ export function useSearch(
       if (!trimmed) return
 
       abortRef.current?.abort()
+      loadMoreAbortRef.current?.abort()
       const controller = new AbortController()
       abortRef.current = controller
       const currentSearchId = ++searchIdRef.current
