@@ -9,8 +9,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { VirtualTrackList, type VirtualTrackListRef } from '@/components/VirtualTrackList'
-import { PLATFORM_COLORS } from '@/lib/platform'
-import { trackKey } from '@/lib/utils'
+import { PLATFORM_BG } from '@/lib/platform'
+import { cn, trackKey } from '@/lib/utils'
 import { useRoomStore } from '@/stores/roomStore'
 import { useSearch } from '@/hooks/useSearch'
 import { usePlaylist } from '@/hooks/usePlaylist'
@@ -137,7 +137,30 @@ export function SearchDialog({ open, onOpenChange, onAddToQueue, onInsertAfterCu
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent className="flex h-[70vh] flex-col overflow-hidden sm:h-auto sm:max-h-[80vh] sm:max-w-2xl">
         <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle>{selectedAlbum ? selectedAlbum.name : '搜索点歌'}</ResponsiveDialogTitle>
+          <div className="flex items-center justify-between gap-3">
+            <ResponsiveDialogTitle className="shrink-0">
+              {selectedAlbum ? selectedAlbum.name : '搜索点歌'}
+            </ResponsiveDialogTitle>
+            {!selectedAlbum && (
+              <div className="flex items-center gap-1">
+                {SOURCES.map((s) => (
+                  <Button
+                    key={s.id}
+                    variant={source === s.id ? 'default' : 'ghost'}
+                    size="sm"
+                    className={cn('h-7 px-2.5 text-xs', source === s.id && PLATFORM_BG[s.id])}
+                    onClick={() => {
+                      setSource(s.id)
+                      resetState()
+                      setAddedIds(new Set())
+                    }}
+                  >
+                    {s.label}
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden">
@@ -157,24 +180,6 @@ export function SearchDialog({ open, onOpenChange, onAddToQueue, onInsertAfterCu
             />
           ) : (
             <>
-              {/* Source tabs */}
-              <Tabs
-                value={source}
-                onValueChange={(v) => {
-                  setSource(v as MusicSource)
-                  resetState()
-                  setAddedIds(new Set())
-                }}
-              >
-                <TabsList className="w-full">
-                  {SOURCES.map((s) => (
-                    <TabsTrigger key={s.id} value={s.id} className={`flex-1 text-xs sm:text-sm ${PLATFORM_COLORS[s.id]}`}>
-                      {s.label}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-
               {/* Type tabs */}
               <Tabs
                 value={searchType}

@@ -21,6 +21,13 @@ export const PLATFORM_COLORS: Record<MusicSource, string> = {
   kugou: 'data-[state=active]:text-blue-500',
 }
 
+/** Background colors for active platform buttons */
+export const PLATFORM_BG: Record<MusicSource, string> = {
+  netease: 'bg-red-500 hover:bg-red-600',
+  tencent: 'bg-green-500 hover:bg-green-600',
+  kugou: 'bg-blue-500 hover:bg-blue-600',
+}
+
 /** VIP level display labels (Netease vipType values) */
 export const VIP_LABELS: Record<number, string> = {
   0: '',
