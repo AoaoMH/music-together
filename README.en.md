@@ -81,23 +81,30 @@ Frontend: http://localhost:5173 | Backend: http://localhost:3001
 
 ## Deploy
 
-Zero-config Docker single-image deployment:
+Single-image Docker deployment:
 
 ```bash
 docker run -d --name music-together --restart unless-stopped \
-  -p 80:3001 ghcr.io/Yueby/music-together:latest
+  -p 3001:3001 \
+  ghcr.io/yueby/music-together:latest
 ```
 
-**LAN deployment (accessible from other devices):**
+> If host port `3001` is already in use, change the left side of `-p <host-port>:<container-port>`, for example `-p 8080:3001`.
+
+In default auto mode, the frontend connects back to the current origin automatically; the server allows all origins and decides whether to set the cookie `Secure` flag based on the incoming request protocol.
+
+**Set `CLIENT_URL` only when you need an explicit origin whitelist:**
 
 ```bash
 docker run -d --name music-together --restart unless-stopped \
-  -p 80:3001 \
-  -e CLIENT_URL=http://192.168.1.100:80 \
-  ghcr.io/Yueby/music-together:latest
+  -p 3001:3001 \
+  -e CLIENT_URL=https://music.example.com \
+  ghcr.io/yueby/music-together:latest
 ```
 
-> Replace `192.168.1.100` with your machine's actual LAN IP. Setting `CLIENT_URL` automatically enables HTTP mode (no Secure cookie), so other devices can access it correctly.
+> `CLIENT_URL` is mainly for explicit whitelist mode or separated frontend/backend deployments. In default auto mode, you usually do not need to set it manually.
+>
+> If you expose HTTPS through Nginx / Caddy / 1Panel / Lucky, make sure the proxy forwards `X-Forwarded-Proto`, or the server cannot auto-detect whether it should issue Secure cookies.
 
 Push to main triggers GitHub Actions to build and push the image. See [Architecture Docs](docs/PROJECT_ARCHITECTURE.md) for details.
 
