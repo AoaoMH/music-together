@@ -81,12 +81,15 @@ pnpm dev
 
 ## 部署
 
-Docker 单镜像零配置部署：
+Docker 单镜像部署：
 
 ```bash
 docker run -d --name music-together --restart unless-stopped \
-  -p 80:3001 ghcr.io/Yueby/music-together:latest
+  -p 3001:3001 \
+  ghcr.io/yueby/music-together:latest
 ```
+
+> 如果宿主机 `3001` 端口已被占用，修改 `-p 宿主机端口:容器端口` 左侧端口即可，例如 `-p 8080:3001`。
 
 默认自动模式下，前端会按当前访问地址自动连接后端；服务端默认开放所有来源访问，并根据当前请求协议自动决定 cookie 是否带 `Secure`。
 
@@ -94,9 +97,9 @@ docker run -d --name music-together --restart unless-stopped \
 
 ```bash
 docker run -d --name music-together --restart unless-stopped \
-  -p 80:3001 \
-  -e CLIENT_URL=http://192.168.1.100:80 \
-  ghcr.io/Yueby/music-together:latest
+  -p 3001:3001 \
+  -e CLIENT_URL=https://music.example.com \
+  ghcr.io/yueby/music-together:latest
 ```
 
 > `CLIENT_URL` 现在主要用于显式白名单模式或前后端分离部署；默认自动模式下通常不再需要手动设置。
