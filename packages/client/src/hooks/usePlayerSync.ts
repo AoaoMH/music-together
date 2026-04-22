@@ -266,6 +266,9 @@ export function usePlayerSync(howlRef: RefObject<Howl | null>, soundIdRef: RefOb
         smoothedDriftRef.current = 0
         emaColdStartRef.current = true
       } else if (absDrift > DRIFT_DEAD_ZONE_MS / 1000 && !rateDisabledRef.current) {
+        // Drift fell below hard-seek threshold — reset consecutive counter
+        // so only truly consecutive above-threshold measurements trigger a seek.
+        hardSeekCountRef.current = 0
         // 宽限期内跳过 rate 微调 — 等 conductor report 稳定后再启用
         if (inGracePeriod) return
         // Proportional rate correction: larger drift → stronger correction,
